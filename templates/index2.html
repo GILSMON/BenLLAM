@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BenLLAM</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .top-bar {
+            background-color: #0078D7;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .top-bar .brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-bar .brand img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .top-bar .brand span {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .top-bar button {
+            background-color: #ffffff;
+            border: none;
+            color: #0078D7;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            max-width: 900px; /* Make it large enough for desktops */
+            height: 80%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-form {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+
+        .message.user {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.assistant {
+            background-color: #f1f1f1;
+            color: black;
+            align-self: flex-start;
+        }
+
+        /* Media Query for Small Screens */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                height: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="brand">
+            <img src="icon.png" alt="BenLLAM Icon">
+            <span>BenLLAM</span>
+        </div>
+        <button onclick="showHelp()">Help</button>
+    </div>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <form class="chat-form" id="chat-form">
+            <input type="text" id="message-input" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+
+        // Function to append a message to the chat box
+        function appendMessage(role, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
+        }
+
+        // Handle form submission
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = messageInput.value;
+            appendMessage('user', message);
+            messageInput.value = '';
+
+            // Send the message to the backend
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message }),
+            });
+
+            const data = await response.json();
+            appendMessage('assistant', data.response);
+        });
+        // Show help functionality
+        function showHelp() {
+            alert('Welcome to BenLLAM!\n\nType your questions in the chatbox, and I will assist you.');
+        }
+    </script>
+</body>
+</html>
