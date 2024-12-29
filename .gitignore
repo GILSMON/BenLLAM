@@ -26,6 +26,7 @@ instance/
 
 #sample files
 g_simple_groq_agent
+g_basic_agent
 templates/index1.html
 templates/index2.html
 
