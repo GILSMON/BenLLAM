@@ -25,6 +25,7 @@ instance/
 *.sqlite3
 
 #sample files
+templates/index1.html
 g_simple_groq_agent
 g_basic_agent
 templates/index1.html

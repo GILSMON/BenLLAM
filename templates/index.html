@@ -175,12 +175,30 @@
 
         // Function to append a message to the chat box
         function appendMessage(role, text) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            messageDiv.textContent = text;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
-        }
+    const messageDiv = document.createElement('div'); // Create a new <div> element.
+    messageDiv.className = `message ${role}`; // Set class to "message" and role (e.g., 'user' or 'assistant').
+
+    // Format the text with HTML for better readability
+    messageDiv.innerHTML = `
+        <p style="font-size: 16px; line-height: 1.5; margin: 5px 0; color: ${role === 'assistant' ? '#333' : '#fff'};">
+            ${text}
+        </p>
+    `;
+
+    // Optional: Add a background color for user and assistant messages
+    messageDiv.style.backgroundColor = role === 'assistant' ? '#f1f1f1' : '#0078d7';
+    messageDiv.style.padding = '10px';
+    messageDiv.style.borderRadius = '8px';
+    messageDiv.style.margin = '10px';
+    messageDiv.style.maxWidth = '80%';
+    messageDiv.style.te
+    messageDiv.style.color = role === 'assistant' ? '#333' : '#fff';
+    messageDiv.style.alignSelf = role === 'assistant' ? 'flex-start' : 'flex-end'; // Align assistant's messages to the left and user's to the right.
+    
+    // Add the message to the chat box
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
+}
 
         // Handle form submission
         chatForm.addEventListener('submit', async (e) => {
